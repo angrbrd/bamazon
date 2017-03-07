@@ -97,7 +97,7 @@ function displayInventory() {
 
 // displayLowInventory will display a list of products with the available quantity below 100
 function displayLowInventory() {
-	console.log('___ENTER displayLowInventory');
+	// console.log('___ENTER displayLowInventory');
 
 	// Construct the db query string
 	queryStr = 'SELECT * FROM products WHERE stock_quantity < 100';
@@ -128,10 +128,82 @@ function displayLowInventory() {
 	})
 }
 
+// validateInput makes sure that the user is supplying only positive integers for their inputs
+function validateInput(value) {
+	var integer = Number.isInteger(parseFloat(value));
+	var sign = Math.sign(value);
+
+	if (integer && (sign === 1)) {
+		return true;
+	} else {
+		return 'Please enter a whole non-zero number.';
+	}
+}
+
 // addInventory will guilde a user in adding additional quantify to an existing item
 function addInventory() {
-	console.log('___ENTER addInventory___')
+	// console.log('___ENTER addInventory___');
 
+	// Prompt the user to select an item
+	inquirer.prompt([
+		{
+			type: 'input',
+			name: 'item_id',
+			message: 'Please enter the Item ID for stock_count update.',
+			validate: validateInput,
+			filter: Number
+		},
+		{
+			type: 'input',
+			name: 'quantity',
+			message: 'How many would you like to add?',
+			validate: validateInput,
+			filter: Number
+		}
+	]).then(function(input) {
+		// console.log('Manager has selected: \n    item_id = '  + input.item_id + '\n    additional quantity = ' + input.quantity);
+
+		var item = input.item_id;
+		var addQuantity = input.quantity;
+
+		// Query db to confirm that the given item ID exists and to determine the current stock_count
+		var queryStr = 'SELECT * FROM products WHERE ?';
+
+		connection.query(queryStr, {item_id: item}, function(err, data) {
+			if (err) throw err;
+
+			// If the user has selected an invalid item ID, data attay will be empty
+			// console.log('data = ' + JSON.stringify(data));
+
+			if (data.length === 0) {
+				console.log('ERROR: Invalid Item ID. Please select a valid Item ID.');
+				addInventory();
+
+			} else {
+				var productData = data[0];
+
+				// console.log('productData = ' + JSON.stringify(productData));
+				// console.log('productData.stock_quantity = ' + productData.stock_quantity);
+
+				console.log('Updating Inventory...');
+
+				// Construct the updating query string
+				var updateQueryStr = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity + addQuantity) + ' WHERE item_id = ' + item;
+				// console.log('updateQueryStr = ' + updateQueryStr);
+
+				// Update the inventory
+				connection.query(updateQueryStr, function(err, data) {
+					if (err) throw err;
+
+					console.log('Stock count for Item ID ' + item + ' has been updated to ' + (productData.stock_quantity + addQuantity) + '.');
+					console.log("\n---------------------------------------------------------------------\n");
+
+					// End the database connection
+					connection.end();
+				})
+			}
+		})
+	})
 }
 
 // createNewProduct will guide the user in adding a new product to the inventory
