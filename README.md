@@ -6,7 +6,7 @@ This application implements a simple command line based storefront using the npm
 
 ### Customer Interface
 
-The customer interface allows the user to view the current inventory of store items: item IDs, descriptions, department in which the item is located and price. The user is then able to purchase one of the existing items by entering the item ID and the desired quantity. If the selected quantity is currently in stock, the users order is fulfilled, displaying the total purchase price and updating the store database. If the desired quantity is not available, the user is prompted to modify their order.
+The customer interface allows the user to view the current inventory of store items: item IDs, descriptions, department in which the item is located and price. The user is then able to purchase one of the existing items by entering the item ID and the desired quantity. If the selected quantity is currently in stock, the user's order is fulfilled, displaying the total purchase price and updating the store database. If the desired quantity is not available, the user is prompted to modify their order.
 
 To run the customer interface please follow the steps below:
 
@@ -42,7 +42,7 @@ To run the manager interface please follow the steps below:
 
 ### Bamazon Demo
 
-You can download and watch the demo of the Bamazon customer and manager interfaces at the link below.
+You can download and watch the demo of the Bamazon customer and manager interfaces at the link below. Make sure to download the video, as opposed to watching it in your Browser, which will display a compressed version making the CLI output illegible.
 
 [Bamazon Demo](https://drive.google.com/open?id=0Bz24wWbZ1MCcdHpYRmhWRldGeWc)
 
