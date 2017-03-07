@@ -89,7 +89,7 @@ function displayInventory() {
 		}
 
 	  	console.log("---------------------------------------------------------------------\n");
-	  	
+
 		// End the database connection
 		connection.end();
 	})
@@ -99,6 +99,33 @@ function displayInventory() {
 function displayLowInventory() {
 	console.log('___ENTER displayLowInventory');
 
+	// Construct the db query string
+	queryStr = 'SELECT * FROM products WHERE stock_quantity < 100';
+
+	// Make the db query
+	connection.query(queryStr, function(err, data) {
+		if (err) throw err;
+
+		console.log('Low Inventory Items (below 100): ');
+		console.log('................................\n');
+
+		var strOut = '';
+		for (var i = 0; i < data.length; i++) {
+			strOut = '';
+			strOut += 'Item ID: ' + data[i].item_id + '  //  ';
+			strOut += 'Product Name: ' + data[i].product_name + '  //  ';
+			strOut += 'Department: ' + data[i].department_name + '  //  ';
+			strOut += 'Price: $' + data[i].price + '  //  ';
+			strOut += 'Quantity: ' + data[i].stock_quantity + '\n';
+
+			console.log(strOut);
+		}
+
+	  	console.log("---------------------------------------------------------------------\n");
+
+		// End the database connection
+		connection.end();
+	})
 }
 
 // addInventory will guilde a user in adding additional quantify to an existing item
