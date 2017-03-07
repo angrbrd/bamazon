@@ -128,8 +128,8 @@ function displayLowInventory() {
 	})
 }
 
-// validateInput makes sure that the user is supplying only positive integers for their inputs
-function validateInput(value) {
+// validateInteger makes sure that the user is supplying only positive integers for their inputs
+function validateInteger(value) {
 	var integer = Number.isInteger(parseFloat(value));
 	var sign = Math.sign(value);
 
@@ -137,6 +137,19 @@ function validateInput(value) {
 		return true;
 	} else {
 		return 'Please enter a whole non-zero number.';
+	}
+}
+
+// validateNumeric makes sure that the user is supplying only positive numbers for their inputs
+function validateNumeric(value) {
+	// Value must be a positive number
+	var number = (typeof parseFloat(value)) === 'number';
+	var positive = parseFloat(value) > 0;
+
+	if (number && positive) {
+		return true;
+	} else {
+		return 'Please enter a positive number for the unit price.'
 	}
 }
 
@@ -150,14 +163,14 @@ function addInventory() {
 			type: 'input',
 			name: 'item_id',
 			message: 'Please enter the Item ID for stock_count update.',
-			validate: validateInput,
+			validate: validateInteger,
 			filter: Number
 		},
 		{
 			type: 'input',
 			name: 'quantity',
 			message: 'How many would you like to add?',
-			validate: validateInput,
+			validate: validateInteger,
 			filter: Number
 		}
 	]).then(function(input) {
@@ -208,7 +221,38 @@ function addInventory() {
 
 // createNewProduct will guide the user in adding a new product to the inventory
 function createNewProduct() {
-	console.log('___ENTER createNewProduct___');
+	// console.log('___ENTER createNewProduct___');
+
+	// Prompt the user to enter information about the new product
+	inquirer.prompt([
+		{
+			type: 'input',
+			name: 'product_name',
+			message: 'Please enter the new product name.',
+		},
+		{
+			type: 'input',
+			name: 'department_name',
+			message: 'Which department does the new product belong to?',
+		},
+		{
+			type: 'input',
+			name: 'price',
+			message: 'What is the price per unit?',
+			validate: validateNumeric
+		},
+		{
+			type: 'input',
+			name: 'stock_quantity',
+			message: 'How many items are in stock?',
+			validate: validateInteger
+		}
+	]).then(function(input) {
+		console.log('Adding New Item: \n    product_name = ' + input.product_name + 
+									   '    department_name = ' + input.department_name + 
+									   '    price = ' + input.price + 
+									   '    stock_quantity = ' + input.stock_quantity);
+	})
 }
 
 // runBamazon will execute the main application logic
