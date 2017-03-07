@@ -248,10 +248,26 @@ function createNewProduct() {
 			validate: validateInteger
 		}
 	]).then(function(input) {
-		console.log('Adding New Item: \n    product_name = ' + input.product_name + 
-									   '    department_name = ' + input.department_name + 
-									   '    price = ' + input.price + 
+		// console.log('input: ' + JSON.stringify(input));
+
+		console.log('Adding New Item: \n    product_name = ' + input.product_name + '\n' +  
+									   '    department_name = ' + input.department_name + '\n' +  
+									   '    price = ' + input.price + '\n' +  
 									   '    stock_quantity = ' + input.stock_quantity);
+
+		// Create the insertion query string
+		var queryStr = 'INSERT INTO products SET ?';
+
+		// Add new product to the db
+		connection.query(queryStr, input, function (error, results, fields) {
+			if (error) throw error;
+
+			console.log('New product has been added to the inventory under Item ID ' + results.insertId + '.');
+			console.log("\n---------------------------------------------------------------------\n");
+
+			// End the database connection
+			connection.end();
+		});
 	})
 }
 
